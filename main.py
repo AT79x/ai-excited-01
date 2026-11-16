@@ -1,21 +1,26 @@
-#!/usr/bin/env python3
-"""Make the AI judge excited - entry program.
-Deterministic, no network, stdlib only.
-Copies the bundled image to /output/entry.png (JPEG data, 1024x1024, <1 MiB).
-Runs twice and writes identical bytes.
+"""Entry for make.fun bounty ai-excited-01.
+
+Copies the bundled entry.jpg to /output/entry.png.
+Standard library only, no network, deterministic: the same
+input bytes always produce the same output bytes.
 """
-import os
+
+from pathlib import Path
 import shutil
-import sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "entry.jpg")
-OUT_DIR = "/output"
-OUT = os.path.join(OUT_DIR, "entry.png")
 
-def main():
-    os.makedirs(OUT_DIR, exist_ok=True)
-    shutil.copyfile(SRC, OUT)
+def main() -> None:
+    source = Path(__file__).resolve().parent / "entry.jpg"
+    if not source.is_file():
+        raise FileNotFoundError(f"bundled image not found: {source}")
+    output_dir = Path("/output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    destination = output_dir / "entry.png"
+    shutil.copyfile(source, destination)
+    # Sanity check: the copy must be byte-for-byte identical.
+    if destination.stat().st_size != source.stat().st_size:
+        raise ValueError("output size does not match bundled image")
+
 
 if __name__ == "__main__":
     main()
