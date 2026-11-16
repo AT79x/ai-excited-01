@@ -5,8 +5,8 @@ Standard library only, no network, deterministic: the same
 input bytes always produce the same output bytes.
 """
 
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 
 def main() -> None:
